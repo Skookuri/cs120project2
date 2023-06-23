@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <title>Project 2</title>
+  <style>
+  	:root {        
+  		--defaultGrey: #3a3a3c;
+  		--hitColor: #538D4E;
+  		--closeColor: #B59F3B;
+	}
+    
+    html {
+    	margin: 0;
+    	padding: 0;
+    	border: 0;
+        vertical-align: baseline;
+    }
+    body {
+    	background-color: #121213;
+        padding-top: 100px;
+        position: relative;
+    }
+    
+    .tile {
+    	border: 2px solid var(--defaultGrey);
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        vertical-align: middle;
+        font-size: 2em;
+        line-height: 1;
+        font-weight: bold;
+        box-sizing: border-box;
+        text-transform: uppercase;
+        height: 48px;
+        width: 48px;
+        color: #fff;
+        font-size: 32px;
+    }
+    
+    .row {
+    	display: grid;
+    	grid-template-columns: repeat(5, 1fr);
+    	grid-gap: 5px;
+    }
+    
+    .board {
+    	padding: 10px;
+        display: grid;
+        grid-template-rows: repeat(6, 1fr);
+        grid-gap: 6px;
+        box-sizing: border-box;
+    }
+    
+    .container {
+    	height: 360px;
+        display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-grow: 1;
+        overflow: hidden;
+    }
+    
+    .keyboard {
+    	height: 200px;
+        margin: 0 8px;
+    }
+    
+    .keyboardRow {
+    	display: flex;
+    	width: 100%;
+    	margin: 0 auto 8px;
+    	touch-action: manipulation;
+    }
+    
+    .keyboardButton {
+    	font-size: 1.25em;
+    	font-weight: bold;
+        border: 0;
+    	padding: 0;
+        height: 58px;
+        border-radius: 4px;
+        cursor: pointer;
+        background-color: #818384;
+        color: #fff;
+        flex: 1;
+    	display: flex;
+        justify-content: center;
+    	align-items: center;
+    	text-transform: uppercase;
+        line-height: 1.15;
+        box-sizing: border-box;
+        margin: 0 6px 0 0;
+    }
+    
+    .miss {
+    	background-color: var(--defaultGrey) !important;
+        border-color: var(--defaultGrey) !important;
+    }
+    
+    .hit {
+    	background-color: var(--hitColor) !important;
+        border-color: var(--hitColor) !important;
+    }
+    
+    .close {
+    	background-color: var(--closeColor) !important;
+        border-color: var(--closeColor) !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="board" id="board"></div>
+  </div>
+  <div class="keyboard" id="keyboard"></div>
+
+  <script>
+    //tile contents
+	const tileContents = [
+		["c", "a", "n", "d", "y"],
+		["e", "e", "e", "e", "e"],
+		["", "", "", "", ""],
+		["", "", "", "", ""],
+		["", "", "", "", ""],
+		["", "", "", "", ""]
+    ];
+    
+    const keyboardContents = {
+		"keyboardRows": [
+			["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
+			["A", "S", "D", "F", "G", "H", "J", "K", "L"],
+    		["Enter", "Z", "X", "C", "V", "B", "N", "M", "Delete"]
+  		]
+	}
+
+    const board = document.getElementById("board");
+    const keyboard = document.getElementById("keyboard");
+
+    //Creates the tiles/rows
+    for (let i = 0; i < tileContents.length; i++) {
+      const row = document.createElement("div");
+      row.classList.add("row");
+
+      for (let j = 0; j < tileContents[i].length; j++) {
+        const tile = document.createElement("div");
+        tile.classList.add("tile");
+        tile.textContent = tileContents[i][j];
+
+        row.appendChild(tile);
+      }
+
+      board.appendChild(row);
+    }
+
+    //Creates the keyboard buttons/rows
+    const keyboardRows = keyboardContents.keyboardRows;
+
+	for (let i = 0; i < keyboardRows.length; i++) {
+  		const keyboardRow = document.createElement("div");
+  		keyboardRow.classList.add("keyboardRow");
+
+  		if (i === 1) {
+    		const leftSpacer = document.createElement("div");
+    		leftSpacer.style.flex = "0.5";
+    		keyboardRow.appendChild(leftSpacer);
+  		}
+
+  		const row = keyboardRows[i];
+
+  		for (let j = 0; j < row.length; j++) {
+    		const button = document.createElement("button");
+    		button.classList.add("keyboardButton");
+    		button.textContent = row[j];
+
+    		keyboardRow.appendChild(button);
+  		}
+
+  		if (i === 1) {
+    		const rightSpacer = document.createElement("div");
+    		rightSpacer.style.flex = "0.5";
+    		keyboardRow.appendChild(rightSpacer);
+  		}
+
+  		keyboard.appendChild(keyboardRow);
+	}
+    
+    $(document).ready(function(){
+      $(".keyboardButton").click(function(){
+        let letter = $(this).text();
+        
+        if (letter === "Delete") {
+          //Deletes
+          let tiles = $(".tile");
+          let lastNonEmptyTile = null;
+
+          // Find the last non-empty tile
+          for (let i = tiles.length - 1; i >= 0; i--) {
+            let tile = $(tiles[i]);
+            if (tile.text().trim() !== "") {
+              lastNonEmptyTile = tile;
+              break;
+            }
+          }
+
+          if (lastNonEmptyTile) {
+            lastNonEmptyTile.text("");
+          }
+        } else {
+          // Find the next empty tile and add the letter
+          let emptyTiles = $(".tile").filter(function(){
+            return $(this).text().trim() === "";
+          });
+
+          if (emptyTiles.length > 0) {
+            let firstEmptyTile = emptyTiles.first();
+            firstEmptyTile.text(letter);
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>
