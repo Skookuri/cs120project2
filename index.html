@@ -188,38 +188,38 @@
   		keyboard.appendChild(keyboardRow);
 	}
     
-    $(document).ready(function(){
-      $(".keyboardButton").click(function(){
-        let letter = $(this).text();
+	$(document).ready(function(){
+		$(".keyboardButton").click(function(){
+			let letter = $(this).text();
         
-        if (letter === "Delete") {
-          //Deletes
-          let tiles = $(".tile");
-          let lastNonEmptyTile = null;
+			if (letter === "Delete") {
+          		//Deletes
+          		let tiles = $(".tile");
+          		let lastNonEmptyTile = null;
 
-          // Find the last non-empty tile
-          for (let i = tiles.length - 1; i >= 0; i--) {
-            let tile = $(tiles[i]);
-            if (tile.text().trim() !== "") {
-              lastNonEmptyTile = tile;
-              break;
-            }
-          }
+          		// Find the last non-empty tile
+          		for (let i = tiles.length - 1; i >= 0; i--) {
+            		let tile = $(tiles[i]);
+            		if (tile.text().trim() !== "") {
+              			lastNonEmptyTile = tile;
+              			break;
+            		}
+          		}
 
-          if (lastNonEmptyTile) {
-            lastNonEmptyTile.text("");
-          }
-        } else {
-          // Find the next empty tile and add the letter
-          let emptyTiles = $(".tile").filter(function(){
-            return $(this).text().trim() === "";
-          });
+          		if (lastNonEmptyTile) {
+            		lastNonEmptyTile.text("");
+          		}
+        	} else {
+          		// Find the next empty tile and add the letter
+          		let emptyTiles = $(".tile").filter(function(){
+            		return $(this).text().trim() === "";
+          		});
 
-          if (emptyTiles.length > 0) {
-            let firstEmptyTile = emptyTiles.first();
-            firstEmptyTile.text(letter);
-          }
-        }
+          		if (emptyTiles.length > 0) {
+            		let firstEmptyTile = emptyTiles.first();
+            		firstEmptyTile.text(letter);
+          		}
+        	}
       });
     });
   </script>
