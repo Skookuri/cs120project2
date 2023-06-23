@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <title>Project 2</title>
   <style>
   	:root {        
@@ -18,10 +19,20 @@
     	border: 0;
         vertical-align: baseline;
     }
+    
     body {
     	background-color: #121213;
         padding-top: 100px;
         position: relative;
+    }
+    
+    .wrapper {
+    	width: 100%;
+		max-width: 500px;
+    	margin: 0 auto;
+    	height: calc(100% - 65px);
+    	display: flex;
+    	flex-direction: column;
     }
     
     .tile {
@@ -55,7 +66,7 @@
         box-sizing: border-box;
     }
     
-    .container {
+    .boardContainer {
     	height: 360px;
         display: flex;
 		justify-content: center;
@@ -96,6 +107,13 @@
         margin: 0 6px 0 0;
     }
     
+    
+    .keyboardButton:active, .keyboardButton:hover {
+    	background-color: #fff;
+        color: #818384;
+        transition: 0.3s;
+    }
+    
     .miss {
     	background-color: var(--defaultGrey) !important;
         border-color: var(--defaultGrey) !important;
@@ -113,12 +131,13 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="board" id="board"></div>
-  </div>
-  <div class="keyboard" id="keyboard"></div>
-
-  <script>
+	<div class="wrapper">
+		<div class="boardContainer">
+			<div class="board" id="board"></div>
+		</div>
+		<div class="keyboard" id="keyboard"></div>
+	</div>
+	<script>
     //tile contents
 	const tileContents = [
 		["c", "a", "n", "d", "y"],
@@ -209,7 +228,11 @@
           		if (lastNonEmptyTile) {
             		lastNonEmptyTile.text("");
           		}
-        	} else {
+        	
+            } else if (letter === "Enter") {
+            	$(this).css('background-color', 'red');
+            
+            } else {
           		// Find the next empty tile and add the letter
           		let emptyTiles = $(".tile").filter(function(){
             		return $(this).text().trim() === "";
@@ -220,6 +243,8 @@
             		firstEmptyTile.text(letter);
           		}
         	}
+            
+            
       });
     });
   </script>
