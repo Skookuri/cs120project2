@@ -248,23 +248,16 @@ $(document).ready(function(){
       if (filled) {
         // Compare the tile letters with the answerWord
         let currentRowTiles = $(".tile").slice(currentRow * 5, currentRow * 5 + 5);
+        
         currentRowTiles.each(function(index){
           let tileText = $(this).text().trim();
-          let letterIndex = currentRow * 5 + index;
-          alert(answerWord.charAt(letterIndex));
-          alert(tileText);
-
-          $(this).css("background-color", "red");
           
-          if (tileText === answerWord.charAt(letterIndex)) {
+          if (tileText === answerWord.charAt(index)) {
             $(this).addClass("hit");
-            alert("hit!");
           } else if (answerWord.includes(tileText)) {
             $(this).addClass("close");
-            alert("close!");
           } else {
             $(this).addClass("miss");
-            alert("miss!");
           }
         });
 
