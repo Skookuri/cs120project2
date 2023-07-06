@@ -27,6 +27,7 @@
       background-color: #121213;
       padding-top: 100px;
       position: relative;
+      color: var(--defaultGrey);
     }
 
     .wrapper {
@@ -140,6 +141,13 @@
       text-shadow: 0 0 1px #fff, 0 0 1px #fff;
       transition: 0.3s;
     }
+    
+    .input-container {
+  		display: flex;
+  		align-items: center;
+  		justify-content: center;
+	}
+    
 
     @keyframes gradient {
       0% {
@@ -207,6 +215,11 @@
 
 <body>
   <div class="wrapper">
+   	<p style="text-align: center;">Enter a guess using the input box, keyboard, or just by typing on your laptop, no input box required!</p>
+    <div class="input-container">
+  		<input type="text" maxlength="5" style="background: transparent; border: 2px solid var(--defaultGrey); color: var(--defaultGrey); font-size: 1em; width: 169px; box-shadow: 0 0 3px #fff, 0 0 3px #fff; text-align: center;">
+  		<button style="background: transparent; color: var(--defaultGrey); font-size: 1em; padding: 10px;">Hide</button>
+	</div>
     <div class="boardContainer">
       <div class="board" id="board"></div>
     </div>
@@ -284,6 +297,14 @@
           console.error('Error:', error);
         });
     }
+    
+	$(".input-container button").click(function() {
+  		$("input").toggle();
+        $(this).text(function(i, text){
+          return $("input").is(":visible") ? "HIDE" : "SHOW";
+      	});
+	});
+    
     $(document).ready(function() {
       /* ARRAY METHOD BELOW
       
@@ -323,6 +344,8 @@
               }
             });
             if (filled) {
+				const input = document.querySelector('input');
+				input.value = '';
               // Compare the tile letters with the answerWord
               let currentRowTiles = $(".tile").slice(currentRow * 5, currentRow * 5 + 5);
               currentRowTiles.each(function(index) {
