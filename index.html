@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -157,10 +156,9 @@
     }
 
     .miss {
-      background-color: var(--defaultGrey) !important;
-      color: #818384;
-       !important;
-      border-color: var(--defaultGrey) !important;
+      background-color: #818384 !important;
+      color: var(--defaultGrey) !important;
+      border-color: #818384 !important;
     }
 
     .hit {
@@ -280,8 +278,6 @@
         .then(response => response.json())
         .then(data => {
           const answerWord = data[0].toUpperCase();
-          console.log(answerWord); // For testing purposes
-          alert(answerWord);
           return answerWord;
         })
         .catch(error => {
@@ -362,6 +358,7 @@
                 currentRow++;
                 if (currentRow >= 6) {
                   currentRow = 0;
+                  alert("The word was: " + answerWord);
                   $(".restartTime").css("display", "block");
                 }
               }
