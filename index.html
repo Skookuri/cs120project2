@@ -175,44 +175,44 @@
     <button class="restartTime" onclick="location.href='https://skookuri.github.io/cs120project2'">Restart</button>
 </div>
 <script>
-      //tile contents
-      const tileContents = [
-        ["", "", "", "", ""],
-        ["", "", "", "", ""],
-        ["", "", "", "", ""],
-        ["", "", "", "", ""],
-        ["", "", "", "", ""],
-        ["", "", "", "", ""]
-      ];
+//tile contents
+const tileContents = [
+	["", "", "", "", ""],
+	["", "", "", "", ""],
+	["", "", "", "", ""],
+	["", "", "", "", ""],
+	["", "", "", "", ""],
+	["", "", "", "", ""]
+	];
+
+const keyboardContents = {
+	"keyboardRows": [
+	["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
+	["A", "S", "D", "F", "G", "H", "J", "K", "L"],
+	["enter", "Z", "X", "C", "V", "B", "N", "M", "delete"]
+	]
+}
       
-      const keyboardContents = {
-        "keyboardRows": [
-          ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
-          ["A", "S", "D", "F", "G", "H", "J", "K", "L"],
-          ["enter", "Z", "X", "C", "V", "B", "N", "M", "delete"]
-        ]
-      }
+const board = document.getElementById("board");
+const keyboard = document.getElementById("keyboard");
       
-      const board = document.getElementById("board");
-      const keyboard = document.getElementById("keyboard");
-      
-      //Creates the tiles/rows
-      for (let i = 0; i < tileContents.length; i++) {
-        const row = document.createElement("div");
-        row.classList.add("row");
+//Creates the tiles/rows
+for (let i = 0; i < tileContents.length; i++) {
+	const row = document.createElement("div");
+	row.classList.add("row");
         
-        for (let j = 0; j < tileContents[i].length; j++) {
-          const tile = document.createElement("div");
-          tile.classList.add("tile");
-          tile.textContent = tileContents[i][j];
-          row.appendChild(tile);
-        }
+	for (let j = 0; j < tileContents[i].length; j++) {
+		const tile = document.createElement("div");
+		tile.classList.add("tile");
+		tile.textContent = tileContents[i][j];
+		row.appendChild(tile);
+	}
         
-        board.appendChild(row);
-      }
+	board.appendChild(row);
+}
       
-      //Creates the keyboard buttons/rows
-      const keyboardRows = keyboardContents.keyboardRows;
+//Creates the keyboard buttons/rows
+const keyboardRows = keyboardContents.keyboardRows;
       
       for (let i = 0; i < keyboardRows.length; i++) {
         const keyboardRow = document.createElement("div");
@@ -243,29 +243,36 @@
       }
       
       $(document).ready(function() {
-        const answerWord = "TASTE"; // Word to be guessed
+        /* ARRAY METHOD BELOW
+        
+        const wordsArray = ["APPLE", "BRAVE", "CARVE", "DANCE", "EARLY", "FABLE", "GRAPE", "HAPPY", "IMAGE", "JEWEL", "KNEAD", "LATCH", "MIRTH", "NICER", "OZONE", "PIQUE", "QUIET", "RUMBA", "SHADE", "TABLE", "UNCLE", "VIPER", "WIDEN", "XENON", "YACHT", "ZEBRA", "FUNGI", "QUEST", "TOAST", "PLAID" ];
+        const answerWord = wordsArray[Math.floor(Math.random() * wordsArray.length)];*/
+        
+        const answerWord = "TASTE";
         let currentRow = 0; // Track the current row
         
         $(".keyboardButton").click(function() {
           let letter = $(this).text();
-          
-          if (letter === "delete") {
-            // Deletes
-            let tiles = $(".tile");
-            let lastNonEmptyTile = null;
-            // Find the last non-empty tile in the current row
-            for (let i = currentRow * 5 + 4; i >= currentRow * 5; i--) {
-              let tile = $(tiles[i]);
-              if (tile.text().trim() !== "") {
-                lastNonEmptyTile = tile;
-                break;
-              }
-            }
-            if (lastNonEmptyTile) {
-              lastNonEmptyTile.text("");
-            }
-          
-          } else if (letter === "enter") {
+    		if (letter === "delete") {
+      			// Check if restartTime button is hidden
+      			if ($(".restartTime").is(":hidden")) {
+        			let tiles = $(".tile");
+        			let lastNonEmptyTile = null;
+        	
+            		// Find the last non-empty tile in the current row
+        			for (let i = currentRow * 5 + 4; i >= currentRow * 5; i--) {
+          				let tile = $(tiles[i]);
+          				if (tile.text().trim() !== "") {
+            				lastNonEmptyTile = tile;
+            				break;
+          				}
+        			}
+        		
+                	if (lastNonEmptyTile !== null) {
+          				lastNonEmptyTile.text("");
+        			}
+      			}
+    		} else if (letter === "enter") {
             // Check if the current row is filled
             let filled = true;
             let tiles = $(".tile").slice(currentRow * 5, currentRow * 5 + 5);
