@@ -140,8 +140,8 @@
 	<script>
     //tile contents
 	const tileContents = [
-		["c", "a", "n", "d", "y"],
-		["e", "e", "e", "e", "e"],
+		["", "", "", "", ""],
+		["", "", "", "", ""],
 		["", "", "", "", ""],
 		["", "", "", "", ""],
 		["", "", "", "", ""],
@@ -207,46 +207,90 @@
   		keyboard.appendChild(keyboardRow);
 	}
     
-	$(document).ready(function(){
-		$(".keyboardButton").click(function(){
-			let letter = $(this).text();
-        
-			if (letter === "Delete") {
-          		//Deletes
-          		let tiles = $(".tile");
-          		let lastNonEmptyTile = null;
+$(document).ready(function(){
+  const answerWord = "PENTA"; // Word to be guessed
 
-          		// Find the last non-empty tile
-          		for (let i = tiles.length - 1; i >= 0; i--) {
-            		let tile = $(tiles[i]);
-            		if (tile.text().trim() !== "") {
-              			lastNonEmptyTile = tile;
-              			break;
-            		}
-          		}
+  let currentRow = 0; // Track the current row
 
-          		if (lastNonEmptyTile) {
-            		lastNonEmptyTile.text("");
-          		}
-        	
-            } else if (letter === "Enter") {
-            	$(this).css('background-color', 'red');
-            
-            } else {
-          		// Find the next empty tile and add the letter
-          		let emptyTiles = $(".tile").filter(function(){
-            		return $(this).text().trim() === "";
-          		});
+  $(".keyboardButton").click(function(){
+    let letter = $(this).text();
 
-          		if (emptyTiles.length > 0) {
-            		let firstEmptyTile = emptyTiles.first();
-            		firstEmptyTile.text(letter);
-          		}
-        	}
-            
-            
+    if (letter === "Delete") {
+      // Deletes
+      let tiles = $(".tile");
+      let lastNonEmptyTile = null;
+
+      // Find the last non-empty tile in the current row
+      for (let i = currentRow * 5 + 4; i >= currentRow * 5; i--) {
+        let tile = $(tiles[i]);
+        if (tile.text().trim() !== "") {
+          lastNonEmptyTile = tile;
+          break;
+        }
+      }
+
+      if (lastNonEmptyTile) {
+        lastNonEmptyTile.text("");
+      }
+      
+    } else if (letter === "Enter") {
+      // Check if the current row is filled
+      let filled = true;
+      let tiles = $(".tile").slice(currentRow * 5, currentRow * 5 + 5);
+      tiles.each(function(index){
+        let tileText = $(this).text().trim();
+        if (tileText === "") {
+          filled = false;
+          return false; // Exit the loop if an empty tile is found
+        }
       });
-    });
+
+      if (filled) {
+        // Compare the tile letters with the answerWord
+        let currentRowTiles = $(".tile").slice(currentRow * 5, currentRow * 5 + 5);
+        currentRowTiles.each(function(index){
+          let tileText = $(this).text().trim();
+          let letterIndex = currentRow * 5 + index;
+          alert(answerWord.charAt(letterIndex));
+          alert(tileText);
+
+          $(this).css("background-color", "red");
+          
+          if (tileText === answerWord.charAt(letterIndex)) {
+            $(this).addClass("hit");
+            alert("hit!");
+          } else if (answerWord.includes(tileText)) {
+            $(this).addClass("close");
+            alert("close!");
+          } else {
+            $(this).addClass("miss");
+            alert("miss!");
+          }
+        });
+
+        // Move to the next row
+        currentRow++;
+        if (currentRow >= 6) {
+          currentRow = 0;
+        }
+        
+        //$(".tile").removeClass("hit close miss"); // Reset classes
+      }
+      
+    } else {
+      // Find the next empty tile in the current row and add the letter
+      let emptyTiles = $(".tile").slice(currentRow * 5, currentRow * 5 + 5).filter(function(){
+        return $(this).text().trim() === "";
+      });
+      if (emptyTiles.length > 0) {
+        let firstEmptyTile = emptyTiles.first();
+        firstEmptyTile.text(letter);
+      }
+    }
+  });
+});
+
+
   </script>
 </body>
 </html>
