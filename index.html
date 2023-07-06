@@ -8,7 +8,7 @@
 <title>Project 2</title>
 <style>
       :root {
-        --defaultGrey: #3a3a3c;
+		--defaultGrey: #3a3a3c;
         --hitColor: #5BCEFA; /*#538D4E;*/
         --closeColor: #F5A9B8; /*#B59F3B;*/
       }
@@ -88,23 +88,10 @@
       }
 
       .keyboardButton {
-        font-size: 1.25em;
-        font-weight: bold;
-        border: 0;
-        padding: 0;
-        height: 58px;
-        border-radius: 4px;
-        cursor: pointer;
-        background-color: #818384;
-        color: #fff;
         flex: 1;
         display: flex;
         justify-content: center;
         align-items: center;
-        text-transform: uppercase;
-        line-height: 1.15;
-        box-sizing: border-box;
-        margin: 0 6px 0 0;
       }
 
       .keyboardButton:active,
@@ -113,7 +100,45 @@
         color: #818384;
         transition: 0.3s;
       }
-
+      
+      button {
+		border: 0;
+        padding: 0;
+        font-size: 1.25em;
+        font-weight: bold;
+        background-color: #818384;
+        color: #fff;
+        height: 58px;
+        border-radius: 4px;
+        cursor: pointer;
+        text-transform: uppercase;
+        line-height: 1.15;
+        box-sizing: border-box;
+        margin: 0 6px 0 0;
+      }
+      
+      .restartTime {
+		background: rgb(91,206,250);
+		background: -moz-linear-gradient(90deg, rgba(91,206,250,1) 0%, rgba(245,169,184,1) 100%);
+		background: -webkit-linear-gradient(90deg, rgba(91,206,250,1) 0%, rgba(245,169,184,1) 100%);
+		background: linear-gradient(90deg, rgba(91,206,250,1) 0%, rgba(245,169,184,1) 100%);
+		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#5bcefa",endColorstr="#f5a9b8",GradientType=1);
+        display: none;
+      }
+      
+      .restartTime:hover {
+      	background: radial-gradient(circle at 100% 100%, rgba(255,255,255,0.52) 0, rgba(255,255,255,0.52) 3px, transparent 3px) 0% 0%/8px 8px no-repeat,
+            radial-gradient(circle at 0 100%, rgba(255,255,255,0.52) 0, rgba(255,255,255,0.52) 3px, transparent 3px) 100% 0%/8px 8px no-repeat,
+            radial-gradient(circle at 100% 0, rgba(255,255,255,0.52) 0, rgba(255,255,255,0.52) 3px, transparent 3px) 0% 100%/8px 8px no-repeat,
+            radial-gradient(circle at 0 0, rgba(255,255,255,0.52) 0, rgba(255,255,255,0.52) 3px, transparent 3px) 100% 100%/8px 8px no-repeat,
+            linear-gradient(rgba(255,255,255,0.52), rgba(255,255,255,0.52)) 50% 50%/calc(100% - 10px) calc(100% - 16px) no-repeat,
+            linear-gradient(rgba(255,255,255,0.52), rgba(255,255,255,0.52)) 50% 50%/calc(100% - 16px) calc(100% - 10px) no-repeat,
+            linear-gradient(312deg, #f5a9b8 0%, #5bcefa 100%);
+		border-radius: 8px;
+		padding: 9px;
+		box-sizing: border-box;
+		transition: 0.3s;
+      }
       .miss {
         background-color: var(--defaultGrey) !important;
         border-color: var(--defaultGrey) !important;
@@ -128,6 +153,8 @@
         background-color: var(--closeColor) !important;
         border-color: var(--closeColor) !important;
       }
+      
+
     </style>
 </head>
 <body>
@@ -136,6 +163,7 @@
 		<div class="board" id="board"></div>
 	</div>
 	<div class="keyboard" id="keyboard"></div>
+    <button class="restartTime" onclick="location.href='https://skookuri.github.io/cs120project2'">Restart</button>
 </div>
 <script>
       //tile contents
@@ -247,28 +275,36 @@
               
               currentRowTiles.each(function(index) {
                 let tileText = $(this).text().trim();
+                
                 let keyboardButton = $(".keyboardButton:contains(" + tileText + ")");
                 let enterButton = $(".keyboardButton:contains(Enter)");
+                let deleteButton = $(".keyboardButton:contains(Delete)");
+                
                 if (tileText === answerWord.charAt(index)) {
                   $(this).addClass("hit");
                   keyboardButton.removeClass("close");
                   keyboardButton.addClass("hit");
                   enterButton.removeClass("hit");
+                  deleteButton.removeClass("hit");
+                  
                 } else if (answerWord.includes(tileText)) {
                   $(this).addClass("close");
                   if (!keyboardButton.hasClass("hit")) {
                     keyboardButton.addClass("close");
                   }
                   enterButton.removeClass("close");
+                  deleteButton.removeClass("close");
                 } else {
                   $(this).addClass("miss");
                   keyboardButton.addClass("miss");
+                  deleteButton.removeClass("miss");
                 }
               });
               // Move to the next row
               currentRow++;
               if (currentRow >= 6) {
                 currentRow = 0;
+                $(".restartTime").css("display", "block");
               }
               //$(".tile").removeClass("hit close miss"); // Reset classes
             }
