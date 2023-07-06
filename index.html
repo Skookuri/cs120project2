@@ -1,386 +1,370 @@
 <!DOCTYPE html>
 <html>
+
 <head>
- <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="icon" type="image/x-icon" href="https://skookuri.github.io/cs120project2/wordlefavi.ico">
-<title>Project 2</title>
-<style>
-      :root {
-		--defaultGrey: #fff;
-        --hitColor: #5BCEFA; /*#538D4E;*/
-        --closeColor: #F5A9B8; /*#B59F3B;*/
-      }
-      
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="icon" type="image/x-icon" href="https://skookuri.github.io/cs120project2/wordlefavi.ico">
+  <title>Project 2</title>
+  <style>
+    :root {
+      --defaultGrey: #fff;
+      --hitColor: #5BCEFA;
+      /*#538D4E;*/
+      --closeColor: #F5A9B8;
+      /*#B59F3B;*/
+    }
 
+    html {
+      margin: 0;
+      padding: 0;
+      border: 0;
+      vertical-align: baseline;
+    }
 
-      html {
-        margin: 0;
-        padding: 0;
-        border: 0;
-        vertical-align: baseline;
-      }
+    body {
+      background-color: #121213;
+      padding-top: 100px;
+      position: relative;
+    }
 
-      body {
-        background-color: #121213;
-        padding-top: 100px;
-        position: relative;
-      }
-      
-      
+    .wrapper {
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+      height: calc(100% - 65px);
+      display: flex;
+      flex-direction: column;
+    }
 
-      .wrapper {
-        width: 100%;
-        max-width: 500px;
-        margin: 0 auto;
-        height: calc(100% - 65px);
-        display: flex;
-        flex-direction: column;
-      }
+    .tile {
+      border: 2px solid #fff;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      vertical-align: middle;
+      font-size: 2em;
+      line-height: 1;
+      font-weight: bold;
+      box-sizing: border-box;
+      text-transform: uppercase;
+      height: 48px;
+      width: 48px;
+      color: #fff;
+      font-size: 32px;
+    }
 
-      .tile {
-        border: 2px solid #fff;
-        display: inline-flex;
-        justify-content: center;
-        align-items: center;
-        vertical-align: middle;
-        font-size: 2em;
-        line-height: 1;
-        font-weight: bold;
-        box-sizing: border-box;
-        text-transform: uppercase;
-        height: 48px;
-        width: 48px;
-        color: #fff;
-        font-size: 32px;
-      }
+    .row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-gap: 5px;
+    }
 
-      .row {
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        grid-gap: 5px;
-      }
+    .board {
+      padding: 10px;
+      display: grid;
+      grid-template-rows: repeat(6, 1fr);
+      grid-gap: 6px;
+      box-sizing: border-box;
+      box-shadow: 0 0 6px #fff, 0 0 6px #fff;
+    }
 
-      .board {
-        padding: 10px;
-        display: grid;
-        grid-template-rows: repeat(6, 1fr);
-        grid-gap: 6px;
-        box-sizing: border-box;
-        box-shadow: 0 0 6px #fff, 0 0 6px #fff;
-        
-      }
+    .boardContainer {
+      height: 360px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-grow: 1;
+      overflow: hidden;
+    }
 
-      .boardContainer {
-        height: 360px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-grow: 1;
-        overflow: hidden;
-      }
+    .keyboard {
+      height: 200px;
+      margin: 0 8px;
+    }
 
-      .keyboard {
-        height: 200px;
-        margin: 0 8px;
-      }
+    .keyboardRow {
+      display: flex;
+      width: 100%;
+      margin: 0 auto 8px;
+      touch-action: manipulation;
+    }
 
-      .keyboardRow {
-        display: flex;
-        width: 100%;
-        margin: 0 auto 8px;
-        touch-action: manipulation;
-      }
+    .keyboardButton {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-      .keyboardButton {
-        flex: 1;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
+    .keyboardButton:active,
+    .keyboardButton:hover {
+      color: #3a3a3c;
+      transition: 0.3s;
+      box-shadow: 0 0 6px #fff, 0 0 6px #fff;
+    }
 
-      .keyboardButton:active,
-      .keyboardButton:hover {
-        color: #3a3a3c;
-        transition: 0.3s;
-        box-shadow: 0 0 6px #fff, 0 0 6px #fff;
-      }
-      
-      button {
-		border: 0;
-        padding: 0;
-        font-size: 1.25em;
-        font-weight: bold;
-        background-color: var(--defaultGrey);
-        color: #818384;
-        height: 58px;
-        border-radius: 4px;
-        cursor: pointer;
-        text-transform: uppercase;
-        line-height: 1.15;
-        box-sizing: border-box;
-        margin: 0 6px 0 0;
-      }
-      
-      .restartTime {
-		background: rgb(91,206,250);
-		background: -moz-linear-gradient(90deg, rgba(91,206,250,1) 0%, rgba(245,169,184,1) 100%);
-		background: -webkit-linear-gradient(90deg, rgba(91,206,250,1) 0%, rgba(245,169,184,1) 100%);
-		background: linear-gradient(90deg, rgba(91,206,250,1) 0%, rgba(245,169,184,1) 100%);
-		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#5bcefa",endColorstr="#f5a9b8",GradientType=1);
-        display: none;
-        background-size: 400% 400%;
-    	animation: gradient 7.5s ease infinite;
-        border: 2px solid var(--defaultGrey);
-        color: var(--defaultGrey);
-      }
-      
-      .restartTime:hover {
-		border: 2px solid #fff;
-        box-shadow: 0 0 6px #fff, 0 0 6px #fff;
-        text-shadow: 0 0 1px #fff, 0 0 1px #fff;
-		transition: 0.3s;
-        
-      }
-      
-	@keyframes gradient {
-    	0% {
-        	background-position: 0% 50%;
-    	}
-    	50% {
-        	background-position: 100% 50%;
-    	}
-    	100% {
-        	background-position: 0% 50%;
-    	}
-	}
-      .miss {
-        background-color: var(--defaultGrey) !important;
-        color: #818384; !important;
-        border-color: var(--defaultGrey) !important;
+    button {
+      border: 0;
+      padding: 0;
+      font-size: 1.25em;
+      font-weight: bold;
+      background-color: var(--defaultGrey);
+      color: #818384;
+      height: 58px;
+      border-radius: 4px;
+      cursor: pointer;
+      text-transform: uppercase;
+      line-height: 1.15;
+      box-sizing: border-box;
+      margin: 0 6px 0 0;
+    }
+
+    .restartTime {
+      background: rgb(91, 206, 250);
+      background: -moz-linear-gradient(90deg, rgba(91, 206, 250, 1) 0%, rgba(245, 169, 184, 1) 100%);
+      background: -webkit-linear-gradient(90deg, rgba(91, 206, 250, 1) 0%, rgba(245, 169, 184, 1) 100%);
+      background: linear-gradient(90deg, rgba(91, 206, 250, 1) 0%, rgba(245, 169, 184, 1) 100%);
+      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#5bcefa", endColorstr="#f5a9b8", GradientType=1);
+      display: none;
+      background-size: 400% 400%;
+      animation: gradient 7.5s ease infinite;
+      border: 2px solid var(--defaultGrey);
+      color: var(--defaultGrey);
+    }
+
+    .restartTime:hover {
+      border: 2px solid #fff;
+      box-shadow: 0 0 6px #fff, 0 0 6px #fff;
+      text-shadow: 0 0 1px #fff, 0 0 1px #fff;
+      transition: 0.3s;
+    }
+
+    @keyframes gradient {
+      0% {
+        background-position: 0% 50%;
       }
 
-      .hit {
-        background-color: var(--hitColor) !important;
-        color: var(--defaultGrey) !important;
-        border-color: var(--hitColor) !important;
+      50% {
+        background-position: 100% 50%;
       }
 
-      .close {
-        background-color: var(--closeColor) !important;
-        color: var(--defaultGrey) !important;
-        border-color: var(--closeColor) !important;
+      100% {
+        background-position: 0% 50%;
       }
-      
+    }
 
+    .miss {
+      background-color: var(--defaultGrey) !important;
+      color: #818384;
+       !important;
+      border-color: var(--defaultGrey) !important;
+    }
 
-.bg {
-  animation:slide 3s ease-in-out infinite alternate;
-  background-image: linear-gradient(-60deg, #F5A9B8 0%, #5BCEFA 100%);
-  bottom:0;
-  left:-50%;
-  opacity:.5;
-  position:fixed;
-  right:-50%;
-  top:0;
-  z-index:-1;
-}
+    .hit {
+      background-color: var(--hitColor) !important;
+      color: var(--defaultGrey) !important;
+      border-color: var(--hitColor) !important;
+    }
 
-.bg2 {
-  animation-direction:alternate-reverse;
-  animation-duration:2s;
-}
+    .close {
+      background-color: var(--closeColor) !important;
+      color: var(--defaultGrey) !important;
+      border-color: var(--closeColor) !important;
+    }
 
-.bg3 {
-  animation-duration:3s;
-}
+    .bg {
+      animation: slide 3s ease-in-out infinite alternate;
+      background-image: linear-gradient(-60deg, #F5A9B8 0%, #5BCEFA 100%);
+      bottom: 0;
+      left: -50%;
+      opacity: .5;
+      position: fixed;
+      right: -50%;
+      top: 0;
+      z-index: -1;
+    }
 
+    .bg2 {
+      animation-direction: alternate-reverse;
+      animation-duration: 2s;
+    }
 
+    .bg3 {
+      animation-duration: 3s;
+    }
 
-@keyframes slide {
-  0% {
-    transform:translateX(-25%);
-  }
-  100% {
-    transform:translateX(25%);
-  }
+    @keyframes slide {
+      0% {
+        transform: translateX(-25%);
+      }
 
-    </style>
+      100% {
+        transform: translateX(25%);
+      }
+  </style>
 </head>
+
 <body>
-<div class="wrapper">
-	<div class="boardContainer">
-		<div class="board" id="board"></div>
-	</div>
-	<div class="keyboard" id="keyboard"></div>
+  <div class="wrapper">
+    <div class="boardContainer">
+      <div class="board" id="board"></div>
+    </div>
+    <div class="keyboard" id="keyboard"></div>
     <button class="restartTime" onclick="location.href='https://skookuri.github.io/cs120project2'">Restart</button>
     <div class="bg"></div>
-<div class="bg bg2"></div>
-<div class="bg bg3"></div>
-</div>
-<script>
-//tile contents
-const tileContents = [
-	["", "", "", "", ""],
-	["", "", "", "", ""],
-	["", "", "", "", ""],
-	["", "", "", "", ""],
-	["", "", "", "", ""],
-	["", "", "", "", ""]
-	];
-
-const keyboardContents = {
-	"keyboardRows": [
-	["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
-	["A", "S", "D", "F", "G", "H", "J", "K", "L"],
-	["enter", "Z", "X", "C", "V", "B", "N", "M", "delete"]
-	]
-}
-      
-const board = document.getElementById("board");
-const keyboard = document.getElementById("keyboard");
-      
-//Creates the tiles/rows
-for (let i = 0; i < tileContents.length; i++) {
-	const row = document.createElement("div");
-	row.classList.add("row");
-        
-	for (let j = 0; j < tileContents[i].length; j++) {
-		const tile = document.createElement("div");
-		tile.classList.add("tile");
-		tile.textContent = tileContents[i][j];
-		row.appendChild(tile);
-	}
-        
-	board.appendChild(row);
-}
-      
-//Creates the keyboard buttons/rows
-const keyboardRows = keyboardContents.keyboardRows;
-      
-      for (let i = 0; i < keyboardRows.length; i++) {
-        const keyboardRow = document.createElement("div");
-        keyboardRow.classList.add("keyboardRow");
-        
-        if (i === 1) {
-          const leftSpacer = document.createElement("div");
-          leftSpacer.style.flex = "0.5";
-          keyboardRow.appendChild(leftSpacer);
-        }
-        
-        const row = keyboardRows[i];
-        
-        for (let j = 0; j < row.length; j++) {
-          const button = document.createElement("button");
-          button.classList.add("keyboardButton");
-          button.textContent = row[j];
-          keyboardRow.appendChild(button);
-        }
-        
-        if (i === 1) {
-          const rightSpacer = document.createElement("div");
-          rightSpacer.style.flex = "0.5";
-          keyboardRow.appendChild(rightSpacer);
-        }
-        
-        keyboard.appendChild(keyboardRow);
+    <div class="bg bg2"></div>
+    <div class="bg bg3"></div>
+  </div>
+  <script>
+    //tile contents
+    const tileContents = [
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""]
+    ];
+    const keyboardContents = {
+      "keyboardRows": [
+        ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
+        ["A", "S", "D", "F", "G", "H", "J", "K", "L"],
+        ["enter", "Z", "X", "C", "V", "B", "N", "M", "delete"]
+      ]
+    }
+    const board = document.getElementById("board");
+    const keyboard = document.getElementById("keyboard");
+    //Creates the tiles/rows
+    for (let i = 0; i < tileContents.length; i++) {
+      const row = document.createElement("div");
+      row.classList.add("row");
+      for (let j = 0; j < tileContents[i].length; j++) {
+        const tile = document.createElement("div");
+        tile.classList.add("tile");
+        tile.textContent = tileContents[i][j];
+        row.appendChild(tile);
       }
+      board.appendChild(row);
+    }
+    //Creates the keyboard buttons/rows
+    const keyboardRows = keyboardContents.keyboardRows;
+    for (let i = 0; i < keyboardRows.length; i++) {
+      const keyboardRow = document.createElement("div");
+      keyboardRow.classList.add("keyboardRow");
+      if (i === 1) {
+        const leftSpacer = document.createElement("div");
+        leftSpacer.style.flex = "0.5";
+        keyboardRow.appendChild(leftSpacer);
+      }
+      const row = keyboardRows[i];
+      for (let j = 0; j < row.length; j++) {
+        const button = document.createElement("button");
+        button.classList.add("keyboardButton");
+        button.textContent = row[j];
+        keyboardRow.appendChild(button);
+      }
+      if (i === 1) {
+        const rightSpacer = document.createElement("div");
+        rightSpacer.style.flex = "0.5";
+        keyboardRow.appendChild(rightSpacer);
+      }
+      keyboard.appendChild(keyboardRow);
+    }
+
+    function getWord() {
+      const url = "https://random-word-api.herokuapp.com/word?length=5";
+      return fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          const answerWord = data[0].toUpperCase();
+          console.log(answerWord); // For testing purposes
+          alert(answerWord);
+          return answerWord;
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }
+    $(document).ready(function() {
+      /* ARRAY METHOD BELOW
       
-      $(document).ready(function() {
-        /* ARRAY METHOD BELOW
-        
-        const wordsArray = ["APPLE", "BRAVE", "CARVE", "DANCE", "EARLY", "FABLE", "GRAPE", "HAPPY", "IMAGE", "JEWEL", "KNEAD", "LATCH", "MIRTH", "NICER", "OZONE", "PIQUE", "QUIET", "RUMBA", "SHADE", "TABLE", "UNCLE", "VIPER", "WIDEN", "XENON", "YACHT", "ZEBRA", "FUNGI", "QUEST", "TOAST", "PLAID" ];
-        const answerWord = wordsArray[Math.floor(Math.random() * wordsArray.length)];*/
-        
-        const answerWord = "TASTE";
+      const wordsArray = ["APPLE", "BRAVE", "CARVE", "DANCE", "EARLY", "FABLE", "GRAPE", "HAPPY", "IMAGE", "JEWEL", "KNEAD", "LATCH", "MIRTH", "NICER", "OZONE", "PIQUE", "QUIET", "RUMBA", "SHADE", "TABLE", "UNCLE", "VIPER", "WIDEN", "XENON", "YACHT", "ZEBRA", "FUNGI", "QUEST", "TOAST", "PLAID" ];
+      const answerWord = wordsArray[Math.floor(Math.random() * wordsArray.length)];*/
+      /*const answerWord = "TRAIN";*/
+      getWord().then(answerWord => {
         let currentRow = 0; // Track the current row
-        
         $(".keyboardButton").click(function() {
           let letter = $(this).text();
-    		if (letter === "delete") {
-      			// Check if restartTime button is hidden
-      			if ($(".restartTime").is(":hidden")) {
-        			let tiles = $(".tile");
-        			let lastNonEmptyTile = null;
-        	
-            		// Find the last non-empty tile in the current row
-        			for (let i = currentRow * 5 + 4; i >= currentRow * 5; i--) {
-          				let tile = $(tiles[i]);
-          				if (tile.text().trim() !== "") {
-            				lastNonEmptyTile = tile;
-            				break;
-          				}
-        			}
-        		
-                	if (lastNonEmptyTile !== null) {
-          				lastNonEmptyTile.text("");
-        			}
-      			}
-    		} else if (letter === "enter") {
+          if (letter === "delete") {
+            // Check if restartTime button is hidden
+            if ($(".restartTime").is(":hidden")) {
+              let tiles = $(".tile");
+              let lastNonEmptyTile = null;
+              // Find the last non-empty tile in the current row
+              for (let i = currentRow * 5 + 4; i >= currentRow * 5; i--) {
+                let tile = $(tiles[i]);
+                if (tile.text().trim() !== "") {
+                  lastNonEmptyTile = tile;
+                  break;
+                }
+              }
+              if (lastNonEmptyTile !== null) {
+                lastNonEmptyTile.text("");
+              }
+            }
+          } else if (letter === "enter") {
             // Check if the current row is filled
             let filled = true;
             let tiles = $(".tile").slice(currentRow * 5, currentRow * 5 + 5);
-            
             tiles.each(function(index) {
               let tileText = $(this).text().trim();
-              
               if (tileText === "") {
                 filled = false;
                 return false; // Exit the loop if an empty tile is found
               }
             });
-            
             if (filled) {
               // Compare the tile letters with the answerWord
               let currentRowTiles = $(".tile").slice(currentRow * 5, currentRow * 5 + 5);
-              
               currentRowTiles.each(function(index) {
                 let tileText = $(this).text().trim();
-                
                 let keyboardButton = $(".keyboardButton:contains(" + tileText + ")");
                 let enterButton = $(".keyboardButton:contains(enter)");
                 let deleteButton = $(".keyboardButton:contains(delete)");
-                
                 if (tileText === answerWord.charAt(index)) {
                   $(this).addClass("hit");
                   keyboardButton.removeClass("close");
                   keyboardButton.addClass("hit");
                   enterButton.removeClass("hit");
                   deleteButton.removeClass("hit");
-                  
                 } else if (answerWord.includes(tileText)) {
                   $(this).addClass("close");
-                  
                   if (!keyboardButton.hasClass("hit")) {
                     keyboardButton.addClass("close");
                   }
-                  
                   enterButton.removeClass("close");
                   deleteButton.removeClass("close");
-                
                 } else {
                   $(this).addClass("miss");
                   keyboardButton.addClass("miss");
                   deleteButton.removeClass("miss");
                 }
               });
-              
               var currentRowTilesHITS = currentRowTiles.filter('.hit');
-              
               if (currentRowTilesHITS.length == currentRowTiles.length) {
-    			alert("WIN!!");
+                alert("WIN!!");
                 $(".restartTime").css("display", "block");
-                
-			  } else {
-    			// Move to the next row
-              	currentRow++;
-              	if (currentRow >= 6) {
-                	currentRow = 0;
-                	$(".restartTime").css("display", "block");
-              	}
-			  }
+              } else {
+                // Move to the next row
+                currentRow++;
+                if (currentRow >= 6) {
+                  currentRow = 0;
+                  $(".restartTime").css("display", "block");
+                }
+              }
             }
           } else {
             // Find the next empty tile in the current row and add the letter
@@ -393,25 +377,21 @@ const keyboardRows = keyboardContents.keyboardRows;
             }
           }
         });
-        
         $(document).keydown(function(event) {
-    		const key = event.key.toUpperCase();
-
-    		if (key === "ENTER") {
-      			$(".keyboardButton:contains('enter')").click();
-      			return;
-    		}
-            
-            if (key === "DELETE" || key === "BACKSPACE") {
-      			$(".keyboardButton:contains('delete')").click();
-      			return;
-    		}
-
-    		const keyboardButton = $(".keyboardButton:contains(" + key + ")");
-      		keyboardButton.click();
-  		});
-        
+          const key = event.key.toUpperCase();
+          if (key === "ENTER") {
+            $(".keyboardButton:contains('enter')").click();
+            return;
+          }
+          if (key === "DELETE" || key === "BACKSPACE") {
+            $(".keyboardButton:contains('delete')").click();
+            return;
+          }
+          const keyboardButton = $(".keyboardButton:contains(" + key + ")");
+          keyboardButton.click();
+        });
       });
-</script>
+    });
+  </script>
 </body>
 </html>
