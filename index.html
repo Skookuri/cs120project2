@@ -124,21 +124,30 @@
 		background: linear-gradient(90deg, rgba(91,206,250,1) 0%, rgba(245,169,184,1) 100%);
 		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#5bcefa",endColorstr="#f5a9b8",GradientType=1);
         display: none;
+        background-size: 400% 400%;
+    	animation: gradient 7.5s ease infinite;
+        border: 2px solid #121213;
       }
       
       .restartTime:hover {
-      	background: radial-gradient(circle at 100% 100%, rgba(255,255,255,0.52) 0, rgba(255,255,255,0.52) 3px, transparent 3px) 0% 0%/8px 8px no-repeat,
-            radial-gradient(circle at 0 100%, rgba(255,255,255,0.52) 0, rgba(255,255,255,0.52) 3px, transparent 3px) 100% 0%/8px 8px no-repeat,
-            radial-gradient(circle at 100% 0, rgba(255,255,255,0.52) 0, rgba(255,255,255,0.52) 3px, transparent 3px) 0% 100%/8px 8px no-repeat,
-            radial-gradient(circle at 0 0, rgba(255,255,255,0.52) 0, rgba(255,255,255,0.52) 3px, transparent 3px) 100% 100%/8px 8px no-repeat,
-            linear-gradient(rgba(255,255,255,0.52), rgba(255,255,255,0.52)) 50% 50%/calc(100% - 10px) calc(100% - 16px) no-repeat,
-            linear-gradient(rgba(255,255,255,0.52), rgba(255,255,255,0.52)) 50% 50%/calc(100% - 16px) calc(100% - 10px) no-repeat,
-            linear-gradient(312deg, #f5a9b8 0%, #5bcefa 100%);
-		border-radius: 8px;
-		padding: 9px;
-		box-sizing: border-box;
+		border: 2px solid #fff;
+        box-shadow: 0 0 6px #fff, 0 0 6px #fff;
+        text-shadow: 0 0 1px #fff, 0 0 1px #fff;
 		transition: 0.3s;
+        
       }
+      
+	@keyframes gradient {
+    	0% {
+        	background-position: 0% 50%;
+    	}
+    	50% {
+        	background-position: 100% 50%;
+    	}
+    	100% {
+        	background-position: 0% 50%;
+    	}
+	}
       .miss {
         background-color: var(--defaultGrey) !important;
         border-color: var(--defaultGrey) !important;
@@ -180,7 +189,7 @@
         "keyboardRows": [
           ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
           ["A", "S", "D", "F", "G", "H", "J", "K", "L"],
-          ["Enter", "Z", "X", "C", "V", "B", "N", "M", "Delete"]
+          ["enter", "Z", "X", "C", "V", "B", "N", "M", "delete"]
         ]
       }
       
@@ -240,7 +249,7 @@
         $(".keyboardButton").click(function() {
           let letter = $(this).text();
           
-          if (letter === "Delete") {
+          if (letter === "delete") {
             // Deletes
             let tiles = $(".tile");
             let lastNonEmptyTile = null;
@@ -256,7 +265,7 @@
               lastNonEmptyTile.text("");
             }
           
-          } else if (letter === "Enter") {
+          } else if (letter === "enter") {
             // Check if the current row is filled
             let filled = true;
             let tiles = $(".tile").slice(currentRow * 5, currentRow * 5 + 5);
@@ -269,6 +278,7 @@
                 return false; // Exit the loop if an empty tile is found
               }
             });
+            
             if (filled) {
               // Compare the tile letters with the answerWord
               let currentRowTiles = $(".tile").slice(currentRow * 5, currentRow * 5 + 5);
@@ -277,8 +287,8 @@
                 let tileText = $(this).text().trim();
                 
                 let keyboardButton = $(".keyboardButton:contains(" + tileText + ")");
-                let enterButton = $(".keyboardButton:contains(Enter)");
-                let deleteButton = $(".keyboardButton:contains(Delete)");
+                let enterButton = $(".keyboardButton:contains(enter)");
+                let deleteButton = $(".keyboardButton:contains(delete)");
                 
                 if (tileText === answerWord.charAt(index)) {
                   $(this).addClass("hit");
@@ -289,24 +299,35 @@
                   
                 } else if (answerWord.includes(tileText)) {
                   $(this).addClass("close");
+                  
                   if (!keyboardButton.hasClass("hit")) {
                     keyboardButton.addClass("close");
                   }
+                  
                   enterButton.removeClass("close");
                   deleteButton.removeClass("close");
+                
                 } else {
                   $(this).addClass("miss");
                   keyboardButton.addClass("miss");
                   deleteButton.removeClass("miss");
                 }
               });
-              // Move to the next row
-              currentRow++;
-              if (currentRow >= 6) {
-                currentRow = 0;
+              
+              var currentRowTilesHITS = currentRowTiles.filter('.hit');
+              
+              if (currentRowTilesHITS.length == currentRowTiles.length) {
+    			alert("WIN!!");
                 $(".restartTime").css("display", "block");
-              }
-              //$(".tile").removeClass("hit close miss"); // Reset classes
+                
+			  } else {
+    			// Move to the next row
+              	currentRow++;
+              	if (currentRow >= 6) {
+                	currentRow = 0;
+                	$(".restartTime").css("display", "block");
+              	}
+			  }
             }
           } else {
             // Find the next empty tile in the current row and add the letter
@@ -319,6 +340,24 @@
             }
           }
         });
+        
+        $(document).keydown(function(event) {
+    		const key = event.key.toUpperCase();
+
+    		if (key === "ENTER") {
+      			$(".keyboardButton:contains('enter')").click();
+      			return;
+    		}
+            
+            if (key === "DELETE" || key === "BACKSPACE") {
+      			$(".keyboardButton:contains('delete')").click();
+      			return;
+    		}
+
+    		const keyboardButton = $(".keyboardButton:contains(" + key + ")");
+      		keyboardButton.click();
+  		});
+        
       });
 </script>
 </body>
