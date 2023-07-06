@@ -208,7 +208,7 @@
 	}
     
 $(document).ready(function(){
-  const answerWord = "PENTA"; // Word to be guessed
+  const answerWord = "TASTE"; // Word to be guessed
 
   let currentRow = 0; // Track the current row
 
@@ -251,13 +251,20 @@ $(document).ready(function(){
         
         currentRowTiles.each(function(index){
           let tileText = $(this).text().trim();
+          let keyboardButton = $(".keyboardButton:contains(" + tileText + ")");
           
           if (tileText === answerWord.charAt(index)) {
             $(this).addClass("hit");
+            keyboardButton.removeClass("close");
+           	keyboardButton.addClass("hit");
           } else if (answerWord.includes(tileText)) {
             $(this).addClass("close");
+            if (!keyboardButton.hasClass("hit")) {
+                keyboardButton.addClass("close");
+            }
           } else {
             $(this).addClass("miss");
+            keyboardButton.addClass("miss");
           }
         });
 
