@@ -291,6 +291,7 @@
         .then(response => response.json())
         .then(data => {
           const answerWord = data[0].toUpperCase();
+          console.log("The answer is: " + answerWord);
           return answerWord;
         })
         .catch(error => {
