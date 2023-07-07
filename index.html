@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -141,13 +142,12 @@
       text-shadow: 0 0 1px #fff, 0 0 1px #fff;
       transition: 0.3s;
     }
-    
+
     .input-container {
-  		display: flex;
-  		align-items: center;
-  		justify-content: center;
-	}
-    
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
     @keyframes gradient {
       0% {
@@ -215,13 +215,13 @@
 
 <body>
   <div class="wrapper">
-   	
+
     <div class="input-container">
-  		<input type="text" maxlength="5" style="background: transparent; border: 2px solid var(--defaultGrey); color: var(--defaultGrey); font-size: 1em; width: 169px; box-shadow: 0 0 3px #fff, 0 0 3px #fff; text-align: center;">
-  		<button style="background: transparent; color: var(--defaultGrey); font-size: 1em; padding: 10px;">Hide</button>
-	</div>
+      <input type="text" maxlength="5" style="background: transparent; border: 2px solid var(--defaultGrey); color: var(--defaultGrey); font-size: 1em; width: 169px; box-shadow: 0 0 3px #fff, 0 0 3px #fff; text-align: center;">
+      <button style="background: transparent; color: var(--defaultGrey); font-size: 1em; padding: 10px;">Hide</button>
+    </div>
     <div class="boardContainer">
-		<div class="board" id="board"></div>
+      <div class="board" id="board"></div>
     </div>
     <div class="keyboard" id="keyboard"></div>
     <button class="restartTime" onclick="location.href='https://skookuri.github.io/cs120project2'">Restart</button>
@@ -245,45 +245,44 @@
         ["A", "S", "D", "F", "G", "H", "J", "K", "L"],
         ["enter", "Z", "X", "C", "V", "B", "N", "M", "delete"]
       ]
-    }
+    };
     const board = document.getElementById("board");
     const keyboard = document.getElementById("keyboard");
-    //Creates the tiles/rows
-    for (let i = 0; i < tileContents.length; i++) {
+    //Creates the tiles/rows using forEach
+    tileContents.forEach(rowContents => {
       const row = document.createElement("div");
       row.classList.add("row");
-      for (let j = 0; j < tileContents[i].length; j++) {
+      rowContents.forEach(tileContent => {
         const tile = document.createElement("div");
         tile.classList.add("tile");
-        tile.textContent = tileContents[i][j];
+        tile.textContent = tileContent;
         row.appendChild(tile);
-      }
+      });
       board.appendChild(row);
-    }
-    //Creates the keyboard buttons/rows
+    });
+    //Creates the keyboard buttons/rows using forEach
     const keyboardRows = keyboardContents.keyboardRows;
-    for (let i = 0; i < keyboardRows.length; i++) {
+    keyboardRows.forEach(row => {
       const keyboardRow = document.createElement("div");
       keyboardRow.classList.add("keyboardRow");
-      if (i === 1) {
+      if (row === keyboardRows[1]) {
         const leftSpacer = document.createElement("div");
         leftSpacer.style.flex = "0.5";
         keyboardRow.appendChild(leftSpacer);
       }
-      const row = keyboardRows[i];
-      for (let j = 0; j < row.length; j++) {
+      row.forEach(buttonContent => {
         const button = document.createElement("button");
         button.classList.add("keyboardButton");
-        button.textContent = row[j];
+        button.textContent = buttonContent;
         keyboardRow.appendChild(button);
-      }
-      if (i === 1) {
+      });
+      if (row === keyboardRows[1]) {
         const rightSpacer = document.createElement("div");
         rightSpacer.style.flex = "0.5";
         keyboardRow.appendChild(rightSpacer);
       }
       keyboard.appendChild(keyboardRow);
-    }
+    });
 
     function getWord() {
       const url = "https://random-word-api.herokuapp.com/word?length=5";
@@ -298,17 +297,14 @@
           console.error('Error:', error);
         });
     }
-    
-	$(".input-container button").click(function() {
-  		$("input").toggle();
-        $(this).text(function(i, text){
-          return $("input").is(":visible") ? "HIDE" : "SHOW";
-      	});
-	});
-    
+    $(".input-container button").click(function() {
+      $("input").toggle();
+      $(this).text(function(i, text) {
+        return $("input").is(":visible") ? "HIDE" : "SHOW";
+      });
+    });
     $(document).ready(function() {
       /* ARRAY METHOD BELOW
-      
       const wordsArray = ["APPLE", "BRAVE", "CARVE", "DANCE", "EARLY", "FABLE", "GRAPE", "HAPPY", "IMAGE", "JEWEL", "KNEAD", "LATCH", "MIRTH", "NICER", "OZONE", "PIQUE", "QUIET", "RUMBA", "SHADE", "TABLE", "UNCLE", "VIPER", "WIDEN", "XENON", "YACHT", "ZEBRA", "FUNGI", "QUEST", "TOAST", "PLAID" ];
       const answerWord = wordsArray[Math.floor(Math.random() * wordsArray.length)];*/
       /*const answerWord = "TRAIN";*/
@@ -345,8 +341,8 @@
               }
             });
             if (filled) {
-				const input = document.querySelector('input');
-				input.value = '';
+              const input = document.querySelector('input');
+              input.value = '';
               // Compare the tile letters with the answerWord
               let currentRowTiles = $(".tile").slice(currentRow * 5, currentRow * 5 + 5);
               currentRowTiles.each(function(index) {
